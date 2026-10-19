@@ -1,0 +1,14 @@
+.DS_Store
+Thumbs.db
+
+# Keep unused photo originals private; the six photos referenced by the site are tracked.
+/assets/images/*.JPG
+!/assets/images/RAK_7405.JPG
+!/assets/images/RAK_7555.JPG
+!/assets/images/RAK_7739.JPG
+!/assets/images/RAK_7767.JPG
+!/assets/images/RAK_8520.JPG
+!/assets/images/RAK_8550.JPG
+
+# The replaced track is no longer used by the site.
+/assets/audio/wedding-melody.wav

@@ -1,0 +1,1 @@
+Add your couple photos here, then update the paths in wedding-config.js.
