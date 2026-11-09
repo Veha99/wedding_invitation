@@ -186,7 +186,7 @@
   // Music starts after the user opens the envelope. Browsers block autoplay
   // before a user gesture, so this is intentional.
   const audio = $('background-music');
-  audio.src = cfg.musicFile || 'assets/audio/wedding-melody.wav';
+  audio.src = cfg.musicFile || '/assets/audio/wedding-melody.wav';
   audio.volume = 0.42;
   let musicPlaying = false;
   function reflectMusic(){

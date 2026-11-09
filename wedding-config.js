@@ -24,20 +24,20 @@ window.WEDDING_CONFIG = {
   mapEmbedUrl: 'https://maps.google.com/maps?q=11.54340545259055,104.819085782388&z=15&output=embed',
   dressCode: 'Garden formal',
 
-  // Replace with images of the real couple. Files in assets/images/ work too,
-  // e.g. 'assets/images/our-photo-1.jpg'. Stock photos need internet access.
+  // Replace with images of the real couple. Keep local paths rooted at /assets/.
+  // Stock photos need internet access.
   photos: [
-    'assets/images/RAK_7739.jpg',
-    'assets/images/RAK_8520.jpg',
-    'assets/images/RAK_7555.jpg',
-    'assets/images/RAK_7767.jpg',
-    'assets/images/RAK_7405.jpg',
-    'assets/images/RAK_8550.jpg',
+    '/assets/images/RAK_7739.JPG',
+    '/assets/images/RAK_8520.JPG',
+    '/assets/images/RAK_7555.JPG',
+    '/assets/images/RAK_7767.JPG',
+    '/assets/images/RAK_7405.JPG',
+    '/assets/images/RAK_8550.JPG',
   ],
 
   // When hosted on Netlify, enable Forms in the Netlify dashboard.
   // Do not set this to true for other hosting providers.
   // Romantic solo piano from Pixabay: "Wedding" by The_Mountain
   // https://pixabay.com/music/solo-piano-wedding-455512/
-  musicFile: 'assets/audio/gentle-wedding-piano.mp3'
+  musicFile: '/assets/audio/gentle-wedding-piano.mp3'
 };
