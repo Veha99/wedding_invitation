@@ -27,17 +27,17 @@ window.WEDDING_CONFIG = {
   // Replace with images of the real couple. Keep local paths rooted at /assets/.
   // Stock photos need internet access.
   photos: [
-    '/assets/images/RAK_7739.JPG',
-    '/assets/images/RAK_8520.JPG',
-    '/assets/images/RAK_7555.JPG',
-    '/assets/images/RAK_7767.JPG',
-    '/assets/images/RAK_7405.JPG',
-    '/assets/images/RAK_8550.JPG',
+    `${window.WEDDING_ASSET_BASE}assets/images/RAK_7739.JPG`,
+    `${window.WEDDING_ASSET_BASE}assets/images/RAK_8520.JPG`,
+    `${window.WEDDING_ASSET_BASE}assets/images/RAK_7555.JPG`,
+    `${window.WEDDING_ASSET_BASE}assets/images/RAK_7767.JPG`,
+    `${window.WEDDING_ASSET_BASE}assets/images/RAK_7405.JPG`,
+    `${window.WEDDING_ASSET_BASE}assets/images/RAK_8550.JPG`,
   ],
 
   // When hosted on Netlify, enable Forms in the Netlify dashboard.
   // Do not set this to true for other hosting providers.
   // Romantic solo piano from Pixabay: "Wedding" by The_Mountain
   // https://pixabay.com/music/solo-piano-wedding-455512/
-  musicFile: '/assets/audio/gentle-wedding-piano.mp3'
+  musicFile: `${window.WEDDING_ASSET_BASE}assets/audio/gentle-wedding-piano.mp3`
 };

@@ -7,7 +7,9 @@
 </head>
 <body>
   <script>
-    fetch('/index.html')
+    const segments = location.pathname.split('/').filter(Boolean);
+    const base = location.hostname.endsWith('github.io') && segments.length ? `/${segments[0]}/` : '/';
+    fetch(`${base}index.html`)
       .then((response) => {
         if (!response.ok) throw new Error('Could not load the invitation.');
         return response.text();

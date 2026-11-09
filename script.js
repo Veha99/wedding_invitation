@@ -9,7 +9,11 @@
     const nameElement = $('guest-name');
     if (!frame || !nameElement) return;
     const path = window.location.pathname.replace(/\/+$/, '');
-    const pathPart = path.slice(path.lastIndexOf('/') + 1);
+    const basePath = (window.WEDDING_ASSET_BASE || '/').replace(/\/+$/, '');
+    const invitationPath = basePath && (path === basePath || path.startsWith(`${basePath}/`))
+      ? path.slice(basePath.length)
+      : path;
+    const pathPart = invitationPath.split('/').filter(Boolean).pop() || '';
     const fragment = window.location.hash.slice(1);
     const legacyPrefix = 'home/';
     // Preferred format: /guest-name/#home (or #story, #timeline, etc.).
@@ -186,7 +190,7 @@
   // Music starts after the user opens the envelope. Browsers block autoplay
   // before a user gesture, so this is intentional.
   const audio = $('background-music');
-  audio.src = cfg.musicFile || '/assets/audio/wedding-melody.wav';
+  audio.src = cfg.musicFile || `${window.WEDDING_ASSET_BASE || '/'}assets/audio/wedding-melody.wav`;
   audio.volume = 0.42;
   let musicPlaying = false;
   function reflectMusic(){
