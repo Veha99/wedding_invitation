@@ -8,13 +8,16 @@
     const frame = $('guest-name-frame');
     const nameElement = $('guest-name');
     if (!frame || !nameElement) return;
+    const path = window.location.pathname.replace(/\/+$/, '');
+    const pathPart = path.slice(path.lastIndexOf('/') + 1);
     const fragment = window.location.hash.slice(1);
-    const separator = fragment.indexOf('/');
-    if (separator < 0 || fragment.slice(0, separator) !== 'home') {
-      nameElement.textContent = '';
-      return;
+    const legacyPrefix = 'home/';
+    // Preferred format: /guest-name/#home (or #story, #timeline, etc.).
+    // Keep supporting the older #home/guest-name format for existing links.
+    let encodedName = pathPart && pathPart.toLowerCase() !== 'index.html' ? pathPart : '';
+    if (!encodedName && fragment.startsWith(legacyPrefix)) {
+      encodedName = fragment.slice(legacyPrefix.length).split('/')[0];
     }
-    const encodedName = fragment.slice(separator + 1);
     let name = encodedName;
     try { name = decodeURIComponent(encodedName); } catch (_) {}
     name = name.trim();
@@ -29,11 +32,33 @@
   const wedding = new Date(cfg.weddingDate || '2027-02-20T16:00:00+07:00');
   const longDay = cfg.weddingDayLabel || new Intl.DateTimeFormat('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Phnom_Penh'}).format(wedding);
   let currentLanguage = 'en';
-  try { currentLanguage = localStorage.getItem('wedding-language') === 'km' ? 'km' : 'en'; } catch (_) {}
+
+  function toKhmerDigits(value) {
+    return String(value).replace(/\d/g, (digit) => '០១២៣៤៥៦៧៨៩'[Number(digit)]);
+  }
 
   function localizedWeddingDay(language=currentLanguage) {
-    if (language === 'km') return new Intl.DateTimeFormat('km-KH', {weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Phnom_Penh'}).format(wedding);
+    if (language === 'km') {
+      const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', {
+        weekday:'long',day:'numeric',month:'numeric',year:'numeric',timeZone:'Asia/Phnom_Penh'
+      }).formatToParts(wedding).map(({type,value}) => [type,value]));
+      const weekdays = {Sunday:'អាទិត្យ',Monday:'ចន្ទ',Tuesday:'អង្គារ',Wednesday:'ពុធ',Thursday:'ព្រហស្បតិ៍',Friday:'សុក្រ',Saturday:'សៅរ៍'};
+      const months = ['មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា','កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ'];
+      return `ថ្ងៃ${weekdays[parts.weekday]} ទី${toKhmerDigits(parts.day)} ខែ${months[Number(parts.month)-1]} ឆ្នាំ${toKhmerDigits(parts.year)}`;
+    }
     return longDay;
+  }
+
+  function localizedCeremonyTime(time, language=currentLanguage) {
+    if (language !== 'km') return time;
+    const match = String(time).trim().match(/^(\d{1,2}):(\d{2})(?:\s*(AM|PM))?$/i);
+    if (!match) return time;
+    const period = match[3] ? ` ${match[3].toUpperCase() === 'PM' ? 'ល្ងាច' : 'ព្រឹក'}` : '';
+    return `${toKhmerDigits(match[1].padStart(2,'0'))}:${toKhmerDigits(match[2])}${period}`;
+  }
+
+  function hasCustomVenueName(name) {
+    return Boolean(name && !['your wedding venue', "the bride's residence"].includes(name.trim().toLowerCase()));
   }
 
   function applyLanguage(language) {
@@ -48,11 +73,19 @@
     document.querySelector('meta[name="description"]').content = isKhmer
       ? `សូមអញ្ជើញចូលរួមអបអរសាទរពិធីមង្គលការរបស់ ${cfg.person1 || short1} និង ${cfg.person2 || short2}។`
       : `You are invited to celebrate the wedding of ${cfg.person1 || short1} and ${cfg.person2 || short2}.`;
-    const toggle = $('language-toggle');
-    if (toggle) {
+    const venueNameIsCustom = hasCustomVenueName(cfg.venueName);
+    const venueLabel = isKhmer
+      ? (cfg.venueNameKm || (venueNameIsCustom ? cfg.venueName : 'គេហដ្ធានខាងស្រី'))
+      : (cfg.venueName || "The bride's residence");
+    const venueAddress = isKhmer
+      ? (cfg.venueAddressKm || (cfg.venueAddress?.toLowerCase() === 'phnom penh, cambodia' ? 'ភ្នំពេញ ប្រទេសកម្ពុជា' : cfg.venueAddress || 'សូមបញ្ចូលអាសយដ្ឋាន'))
+      : (cfg.venueAddress || 'Add an address');
+    ['ceremony-venue','reception-venue','venue-name'].forEach((id) => setText(id, venueLabel));
+    if ($('venue-map')) $('venue-map').title = isKhmer ? 'ផែនទីបង្ហាញទីតាំងពិធីមង្គលការ' : 'Map showing the wedding venue';
+    document.querySelectorAll('.language-toggle').forEach((toggle) => {
       toggle.textContent = isKhmer ? 'English' : 'ខ្មែរ';
       toggle.setAttribute('aria-label', isKhmer ? 'ប្តូរភាសាទៅជាភាសាអង់គ្លេស' : 'Switch language to Khmer');
-    }
+    });
     const aria = isKhmer ? {
       intro:'បើកលិខិតអញ្ជើញចូលរួមពិធីមង្គលការ', nav:'ម៉ឺនុយមេ', countdown:'រាប់ថយក្រោយដល់ថ្ងៃមង្គលការ',
       hero:'រូបថតគូស្វាមីភរិយាគំរូ សូមជំនួសដោយរូបថតផ្ទាល់ខ្លួន', story:'រូបថតគូស្វាមីភរិយាកំពុងដើរជាមួយគ្នា',
@@ -84,10 +117,15 @@
     $('music-button').title = isKhmer ? 'បិទ/បើកតន្ត្រី' : 'Toggle music';
     $('music-button').setAttribute('aria-label', $('music-button').getAttribute('aria-pressed') === 'true' ? aria.musicOn : aria.musicOff);
     const dayLabel = localizedWeddingDay();
+    const eventDate = $('invitation-date');
+    if (eventDate){eventDate.textContent = dayLabel;eventDate.dateTime = wedding.toISOString().slice(0,10);}
+    setText('invitation-time', localizedCeremonyTime(cfg.ceremonyTime || '4:00 PM'));
+    setText('invitation-location', venueLabel);
+    setText('invitation-address', venueAddress);
+    setText('venue-address', venueAddress);
     setText('hero-date', isKhmer ? dayLabel : dayLabel.toUpperCase());
     setText('ceremony-date', dayLabel);
     setText('reception-date', dayLabel);
-    try { localStorage.setItem('wedding-language', currentLanguage); } catch (_) {}
     if (typeof updateCountdown === 'function') updateCountdown();
   }
 
@@ -110,6 +148,9 @@
   setText('venue-address', cfg.venueAddress || 'Add an address');
   setText('footer-year', String(wedding.getFullYear()));
   if ($('map-link')) $('map-link').href = cfg.mapsLink || '#details';
+    const venueForMap = hasCustomVenueName(cfg.venueName) ? cfg.venueName : '';
+    const mapQuery = [venueForMap, cfg.venueAddress].filter(Boolean).join(', ') || 'Phnom Penh, Cambodia';
+    if ($('venue-map')) $('venue-map').src = cfg.mapEmbedUrl || `https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`;
 
   // If a photo cannot load (for example offline), a soft botanical-colored
   // background is displayed. Replace stock URL entries with your own files.
@@ -125,7 +166,9 @@
   putPhoto($('story-mini-photo'), photos[3] || photos[0]);
   document.querySelectorAll('.gallery__item').forEach((item,index) => putPhoto(item.querySelector('img'), photos[index]));
   applyLanguage(currentLanguage);
-  $('language-toggle').addEventListener('click', () => applyLanguage(currentLanguage === 'en' ? 'km' : 'en'));
+  document.querySelectorAll('.language-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', () => applyLanguage(currentLanguage === 'en' ? 'km' : 'en'));
+  });
 
   // Reveal animations respect reduced-motion settings.
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -161,12 +204,40 @@
   }
   function pauseMusic(){audio.pause(); musicPlaying=false;reflectMusic();}
   $('music-button').addEventListener('click',()=>musicPlaying ? pauseMusic() : playMusic());
+  const mobileNavQuery = window.matchMedia('(max-width: 760px)');
+  let mobileNavHideTimer;
+  let mobileNavAutoHideStarted = false;
+  function scheduleMobileNavHide(){
+    clearTimeout(mobileNavHideTimer);
+    if (!mobileNavQuery.matches){document.body.classList.remove('mobile-nav-hidden');return;}
+    document.body.classList.remove('mobile-nav-hidden');
+    mobileNavHideTimer = window.setTimeout(()=>document.body.classList.add('mobile-nav-hidden'),1500);
+  }
+  function startMobileNavAutoHide(){
+    if (mobileNavAutoHideStarted) return;
+    mobileNavAutoHideStarted = true;
+    scheduleMobileNavHide();
+  }
+  window.addEventListener('scroll',()=>{
+    if (mobileNavAutoHideStarted && mobileNavQuery.matches) scheduleMobileNavHide();
+  },{passive:true});
+  window.addEventListener('resize',()=>{
+    if (!mobileNavQuery.matches){clearTimeout(mobileNavHideTimer);document.body.classList.remove('mobile-nav-hidden');}
+    else if (mobileNavAutoHideStarted) scheduleMobileNavHide();
+  },{passive:true});
+  const mobileNav = document.querySelector('.navigation');
+  mobileNav?.addEventListener('focusin',()=>{
+    clearTimeout(mobileNavHideTimer);
+    document.body.classList.remove('mobile-nav-hidden');
+  });
+  mobileNav?.addEventListener('focusout',scheduleMobileNavHide);
   $('open-invitation').addEventListener('click',()=>{
     document.body.classList.remove('invitation-locked');
     $('site-shell').classList.add('is-visible');
     $('intro').classList.add('is-hidden');
     $('intro').setAttribute('aria-hidden','true');
     $('music-button').classList.add('is-shown');
+    startMobileNavAutoHide();
     playMusic();
     setTimeout(()=>$('intro').remove(),1100);
   });
@@ -185,22 +256,6 @@
     setText('count-seconds',format.format(seconds));
   }
   updateCountdown();setInterval(updateCountdown,1000);
-
-  // Calendar file, with the date/time converted to UTC.
-  function escICS(v){return String(v||'').replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;');}
-  function utcICS(d){return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');}
-  $('calendar-button').addEventListener('click',()=>{
-    if(Number.isNaN(wedding.getTime())){alert(currentLanguage === 'km' ? 'សូមបញ្ចូលកាលបរិច្ឆេទមង្គលការត្រឹមត្រូវក្នុង wedding-config.js ជាមុនសិន។' : 'Add a valid wedding date in wedding-config.js first.');return;}
-    const end=new Date(wedding.getTime()+4*60*60*1000);
-    const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Wedding Invitation//EN','CALSCALE:GREGORIAN','BEGIN:VEVENT',
-      `UID:wedding-${wedding.getTime()}@wedding-invitation`,
-      `DTSTAMP:${utcICS(new Date())}`,`DTSTART:${utcICS(wedding)}`,`DTEND:${utcICS(end)}`,
-      `SUMMARY:${escICS('Wedding of '+names)}`,`LOCATION:${escICS(cfg.venueName+' - '+cfg.venueAddress)}`,
-      `DESCRIPTION:${currentLanguage === 'km' ? 'យើងរង់ចាំអបអរសាទរជាមួយលោកអ្នក!' : 'We look forward to celebrating with you!'}`,'END:VEVENT','END:VCALENDAR'].join('\r\n');
-    const link=document.createElement('a'); link.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar;charset=utf-8'}));
-    link.download='wedding-invitation.ics';document.body.append(link);link.click();link.remove();
-    setTimeout(()=>URL.revokeObjectURL(link.href),3000);
-  });
 
   // Gallery lightbox, keyboard accessible.
   let activePhoto=0;
