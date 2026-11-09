@@ -240,14 +240,24 @@
   });
   mobileNav?.addEventListener('focusout',scheduleMobileNavHide);
   $('open-invitation').addEventListener('click',()=>{
-    document.body.classList.remove('invitation-locked');
-    $('site-shell').classList.add('is-visible');
-    $('intro').classList.add('is-hidden');
-    $('intro').setAttribute('aria-hidden','true');
-    $('music-button').classList.add('is-shown');
-    startMobileNavAutoHide();
+    const intro = $('intro');
+    const openButton = $('open-invitation');
+    if (intro.classList.contains('is-opening')) return;
+    intro.classList.add('is-opening');
+    openButton.disabled = true;
+    openButton.setAttribute('aria-busy', 'true');
     playMusic();
-    setTimeout(()=>$('intro').remove(),1100);
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.setTimeout(()=>{
+      document.body.classList.remove('invitation-locked');
+      $('site-shell').classList.add('is-visible');
+      intro.classList.add('is-hidden');
+      intro.setAttribute('aria-hidden','true');
+      $('music-button').classList.add('is-shown');
+      startMobileNavAutoHide();
+      setTimeout(()=>intro.remove(),1100);
+    }, reducedMotion ? 30 : 3250);
   });
 
   // Countdown: correct on the user's local device regardless of time zone,

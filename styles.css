@@ -94,18 +94,6 @@ section {
     border: 0 !important
 }
 
-.demo-ribbon {
-    position: relative;
-    z-index: 11;
-    background: #33473d;
-    color: #fff9e9;
-    text-align: center;
-    letter-spacing: .14em;
-    font-size: 9px;
-    font-weight: 700;
-    padding: 4px 8px
-}
-
 .site-shell {
     opacity: 0;
     transition: opacity 1s ease
@@ -232,6 +220,252 @@ section {
     pointer-events: none
 }
 
+.garden-gate {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    overflow: hidden;
+    perspective: 1200px;
+    background: transparent;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .22s ease, visibility .22s ease
+}
+
+.intro.is-opening .garden-gate {
+    visibility: visible;
+    opacity: 1
+}
+
+.intro.is-opening .intro__language-toggle {
+    visibility: hidden;
+    opacity: 0
+}
+
+.garden-gate__art {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: block;
+    width: min(80vw, 124vh);
+    height: auto;
+    aspect-ratio: 3 / 2;
+    backface-visibility: hidden;
+    transform: translate(-50%, -50%);
+    pointer-events: none
+}
+
+.garden-gate__frame {
+    z-index: 2;
+    opacity: .96;
+    filter: saturate(.68) brightness(1.02) drop-shadow(0 0 8px rgba(255, 239, 199, .44)) drop-shadow(0 0 22px rgba(183, 160, 107, .18))
+}
+
+.garden-gate__door {
+    z-index: 1;
+    opacity: 1;
+    filter: saturate(.68) brightness(1.02) drop-shadow(0 0 6px rgba(255, 239, 199, .52)) drop-shadow(0 0 16px rgba(183, 160, 107, .2));
+    transform: translate(-50%, -50%);
+    transition: opacity 1.15s ease-in 1.22s, transform 2.35s cubic-bezier(.18, .68, .24, 1);
+    will-change: transform, opacity
+}
+
+.garden-gate__door--left { clip-path: inset(0 50% 0 0); transform-origin: 13% 50% }
+.garden-gate__door--right { clip-path: inset(0 0 0 50%); transform-origin: 87% 50% }
+
+.gate-aura {
+    position: absolute;
+    z-index: 0;
+    left: 50%;
+    top: 50%;
+    width: min(54vw, 820px);
+    height: min(76vh, 740px);
+    border: 1px solid rgba(239, 212, 151, .2);
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255, 232, 177, .26) 0%, rgba(247, 216, 192, .15) 38%, rgba(255, 246, 231, 0) 72%);
+    box-shadow: 0 0 38px rgba(235, 205, 147, .14), inset 0 0 42px rgba(255, 242, 211, .2);
+    filter: blur(2px);
+    opacity: .78;
+    transform: translate(-50%, -50%);
+    pointer-events: none
+}
+
+.intro.is-opening .gate-aura { animation: gateMagicBloom 1.7s ease-out both }
+
+@keyframes gateMagicBloom {
+    0% { opacity: .78; transform: translate(-50%, -50%) scale(.82) }
+    32% { opacity: 1; transform: translate(-50%, -50%) scale(1.08) }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.42) }
+}
+
+.gate-sparkle {
+    position: absolute;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    color: #fff8d9;
+    font-size: 19px;
+    text-shadow: 0 0 5px #fff9df, 0 0 13px rgba(238, 204, 122, .9);
+    opacity: .78;
+    animation: gateSparkleTwinkle 2.8s ease-in-out infinite;
+    pointer-events: none
+}
+
+.gate-sparkle--one { left: 40%; top: 30%; --burst-x: -10vw; --burst-y: -18vh; animation-delay: .15s }
+.gate-sparkle--two { left: 59%; top: 29%; --burst-x: 12vw; --burst-y: -17vh; animation-delay: .8s }
+.gate-sparkle--three { left: 34%; top: 49%; --burst-x: -18vw; --burst-y: 2vh; animation-delay: 1.35s }
+.gate-sparkle--four { left: 65%; top: 48%; --burst-x: 18vw; --burst-y: 4vh; animation-delay: .5s }
+.gate-sparkle--five { left: 47%; top: 23%; --burst-x: -3vw; --burst-y: -24vh; animation-delay: 1.05s }
+.gate-sparkle--six { left: 53%; top: 65%; --burst-x: 5vw; --burst-y: 19vh; animation-delay: 1.7s }
+
+@keyframes gateSparkleTwinkle {
+    0%, 100% { opacity: .22; transform: scale(.55) rotate(0deg) }
+    50% { opacity: 1; transform: scale(1.18) rotate(35deg) }
+}
+
+.intro.is-opening .gate-sparkle { animation: gateSparkleBurst 1.15s ease-out both }
+.intro.is-opening .gate-sparkle--one { animation-delay: .12s }
+.intro.is-opening .gate-sparkle--two { animation-delay: .2s }
+.intro.is-opening .gate-sparkle--three { animation-delay: .28s }
+.intro.is-opening .gate-sparkle--four { animation-delay: .36s }
+.intro.is-opening .gate-sparkle--five { animation-delay: .18s }
+.intro.is-opening .gate-sparkle--six { animation-delay: .42s }
+
+@keyframes gateSparkleBurst {
+    0% { opacity: .25; transform: translate(0, 0) scale(.5) rotate(0deg) }
+    28% { opacity: 1; transform: translate(0, 0) scale(1.5) rotate(45deg) }
+    100% { opacity: 0; transform: translate(var(--burst-x), var(--burst-y)) scale(.08) rotate(130deg) }
+}
+
+.intro.is-opening .garden-gate__door--left { transform: translate(-50%, -50%) scale(.98) rotateY(-74deg); opacity: 0 }
+.intro.is-opening .garden-gate__door--right { transform: translate(-50%, -50%) scale(.98) rotateY(74deg); opacity: 0 }
+
+.gate-butterfly {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    height: 28px;
+    color: #B7A06B;
+    opacity: 0;
+    filter: drop-shadow(0 0 5px rgba(255, 247, 213, .9)) drop-shadow(0 0 13px rgba(238, 204, 122, .82)) drop-shadow(0 0 20px rgba(216, 169, 173, .48));
+    transform: translate(-50%, -50%) scale(.2)
+}
+
+.gate-butterfly svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    fill: currentColor
+}
+
+.gate-butterfly svg > path:first-child {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: gateWingFlap .18s ease-in-out infinite alternate
+}
+
+@keyframes gateWingFlap {
+    from { transform: scaleX(1) }
+    to { transform: scaleX(.42) }
+}
+
+.gate-butterfly:nth-of-type(odd) {
+    color: #d8a9ad
+}
+
+.gate-butterfly .gate-butterfly__body {
+    fill: none;
+    stroke: #806b4c;
+    stroke-width: 1.6;
+    stroke-linecap: round
+}
+
+.intro.is-opening .gate-butterfly {
+    animation: gateButterflyFly 1.35s cubic-bezier(.17, .62, .3, 1) both
+}
+
+.gate-butterfly--one { --fly-x: -34vw; --fly-y: -29vh; }
+.gate-butterfly--two { --fly-x: 34vw; --fly-y: -24vh; animation-delay: 1.25s !important; }
+.gate-butterfly--three { --fly-x: -39vw; --fly-y: 13vh; animation-delay: 1.33s !important; }
+.gate-butterfly--four { --fly-x: 39vw; --fly-y: 18vh; animation-delay: 1.41s !important; }
+.gate-butterfly--five { --fly-x: 3vw; --fly-y: -42vh; animation-delay: 1.29s !important; }
+.gate-butterfly--one { animation-delay: 1.17s !important; }
+.gate-butterfly--six { --fly-x: -22vw; --fly-y: -40vh; animation-delay: 1.47s !important; width: 25px; height: 22px; color: #d8a9ad }
+.gate-butterfly--seven { --fly-x: 24vw; --fly-y: -36vh; animation-delay: 1.55s !important; width: 38px; height: 33px; color: #c9a75f }
+.gate-butterfly--eight { --fly-x: -43vw; --fly-y: 31vh; animation-delay: 1.63s !important; width: 27px; height: 24px; color: #d8a9ad }
+.gate-butterfly--nine { --fly-x: 43vw; --fly-y: 8vh; animation-delay: 1.71s !important; width: 35px; height: 31px; color: #c9a75f }
+
+.gate-flower {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    color: #d8a9ad;
+    opacity: 0;
+    filter: drop-shadow(0 0 6px rgba(255, 248, 218, .95)) drop-shadow(0 0 16px rgba(238, 204, 122, .84)) drop-shadow(0 0 24px rgba(216, 169, 173, .52));
+    transform: translate(-50%, -50%) scale(.1);
+    pointer-events: none
+}
+
+.gate-flower svg { display: block; width: 100%; height: 100% }
+.gate-flower--two, .gate-flower--four { color: #c9a75f }
+.gate-flower--one { --flower-x: -32vw; --flower-y: -15vh }
+.gate-flower--two { --flower-x: 34vw; --flower-y: -12vh }
+.gate-flower--three { --flower-x: -26vw; --flower-y: 34vh }
+.gate-flower--four { --flower-x: 30vw; --flower-y: 30vh }
+
+.intro.is-opening .gate-flower { animation: gateFlowerDrift 1.45s cubic-bezier(.2, .65, .3, 1) both }
+.intro.is-opening .gate-flower--one { animation-delay: 1.45s }
+.intro.is-opening .gate-flower--two { animation-delay: 1.55s }
+.intro.is-opening .gate-flower--three { animation-delay: 1.65s }
+.intro.is-opening .gate-flower--four { animation-delay: 1.75s }
+
+@keyframes gateFlowerDrift {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(.1) rotate(-25deg) }
+    24% { opacity: 1; filter: drop-shadow(0 0 9px rgba(255, 255, 231, 1)) drop-shadow(0 0 25px rgba(238, 204, 122, .98)) drop-shadow(0 0 38px rgba(216, 169, 173, .62)); transform: translate(-50%, -50%) scale(1.28) rotate(15deg) }
+    100% { opacity: 0; filter: drop-shadow(0 0 4px rgba(255, 248, 218, .65)); transform: translate3d(var(--flower-x), var(--flower-y), 0) translate(-50%, -50%) scale(.72) rotate(95deg) }
+}
+
+@keyframes gateButterflyFly {
+    0% { opacity: 0; filter: drop-shadow(0 0 3px rgba(255, 247, 213, .75)); transform: translate(-50%, -50%) scale(.2) rotate(-20deg) }
+    18% { opacity: 1; filter: drop-shadow(0 0 8px rgba(255, 255, 231, 1)) drop-shadow(0 0 20px rgba(238, 204, 122, .96)) drop-shadow(0 0 30px rgba(216, 169, 173, .68)) }
+    62% { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 255, 231, .96)) drop-shadow(0 0 15px rgba(238, 204, 122, .86)) drop-shadow(0 0 24px rgba(216, 169, 173, .54)); transform: translate3d(calc(var(--fly-x) * .58), calc(var(--fly-y) * .58), 0) translate(-50%, -50%) scale(1.22) rotate(12deg) }
+    100% { opacity: 0; filter: drop-shadow(0 0 2px rgba(255, 247, 213, .4)); transform: translate3d(var(--fly-x), var(--fly-y), 0) translate(-50%, -50%) scale(.9) rotate(-10deg) }
+}
+
+.intro.is-opening .intro__content {
+    animation: none;
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none
+}
+
+@media (max-width: 760px) {
+    .garden-gate__art { width: min(90vw, 86vh) }
+    .garden-gate__door--left { transform-origin: 13% 50% }
+    .garden-gate__door--right { transform-origin: 87% 50% }
+    .gate-aura { width: 86vw; height: 54vh }
+    .gate-sparkle { width: 18px; height: 18px; font-size: 16px }
+    .intro.is-opening .garden-gate__door--left { transform: translate(-50%, -50%) scale(1.02) rotateY(-80deg) }
+    .intro.is-opening .garden-gate__door--right { transform: translate(-50%, -50%) scale(1.02) rotateY(80deg) }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intro.is-opening .garden-gate__door { transition-duration: .01ms; transition-delay: 0s }
+    .intro.is-opening .gate-butterfly { display: none }
+    .intro.is-opening .gate-sparkle { display: none }
+    .intro.is-opening .gate-flower { display: none }
+    .gate-butterfly svg > path:first-child { animation: none }
+    .intro.is-opening .gate-aura { animation: none; opacity: 0 }
+    .intro.is-opening .intro__content { animation: none; opacity: 0; transform: translateY(8px) }
+}
+
 .intro__grain {
     pointer-events: none;
     position: absolute;
@@ -244,7 +478,8 @@ section {
     z-index: 1;
     width: min(90%, 520px);
     padding: 20px 0;
-    animation: introRise 1.2s ease both
+    animation: introRise 1.2s ease both;
+    transition: opacity .18s ease, transform .18s ease
 }
 
 .intro__petal {
@@ -1414,11 +1649,6 @@ section {
 }
 
 @media(max-width:480px) {
-    .demo-ribbon {
-        letter-spacing: .035em;
-        font-size: 8px
-    }
-
     .intro__heading {
         font-size: 45px
     }
@@ -1645,10 +1875,6 @@ section {
     background: #B7A06B
 }
 
-.demo-ribbon {
-    background: #B7A06B
-}
-
 .btn--dark {
     background: #B7A06B;
     border-color: #B7A06B
@@ -1722,7 +1948,7 @@ section {
     }
 }
 
-.closing,.footer,.demo-ribbon,.btn--dark{color:#51413e}
+.closing,.footer,.btn--dark{color:#51413e}
 .closing__top,.closing h2 em,.closing__heart,.closing strong,.footer button{color:#51413e}
 .language-toggle{position:static;z-index:auto;display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;min-height:42px;padding:8px 14px;border:1px solid #B7A06B;background:#fff9f6;color:#B7A06B;font:500 16px/1.5 'Noto Sans Khmer',var(--font-sans),sans-serif;letter-spacing:0;white-space:nowrap;box-shadow:none;cursor:pointer;transition:background .2s,color .2s}
 .language-toggle:hover,.language-toggle:focus-visible{background:#f0dedd;color:#8f7446}

@@ -36,7 +36,5 @@ window.WEDDING_CONFIG = {
 
   // When hosted on Netlify, enable Forms in the Netlify dashboard.
   // Do not set this to true for other hosting providers.
-  // Romantic solo piano from Pixabay: "Wedding" by The_Mountain
-  // https://pixabay.com/music/solo-piano-wedding-455512/
-  musicFile: `${window.WEDDING_ASSET_BASE}assets/audio/gentle-wedding-piano.mp3`
+  musicFile: `${window.WEDDING_ASSET_BASE}assets/audio/bridgerton.mp3?v=1`
 };

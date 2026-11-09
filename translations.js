@@ -1,6 +1,5 @@
 window.WEDDING_TRANSLATIONS = [
   ['.skip-link', 'Skip to invitation', 'រំលងទៅកាន់លិខិតអញ្ជើញ'],
-  ['.demo-ribbon', 'DEMO TEMPLATE · Please replace sample details before sharing', 'គំរូសាកល្បង · សូមជំនួសព័ត៌មានគំរូ មុនពេលចែករំលែក'],
   ['#intro .eyebrow', 'A LOVE STORY UNFOLDING', 'រឿងស្នេហាកំពុងចាប់ផ្តើម'],
   ['.envelope__letter span', 'the wedding of', 'ពិធីមង្គលការរបស់'],
   ['.intro__overline', 'Together with our families', 'រួមជាមួយក្រុមគ្រួសារទាំងសងខាង'],
