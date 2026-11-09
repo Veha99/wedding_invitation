@@ -3,6 +3,8 @@
   const cfg = window.WEDDING_CONFIG || {};
   const $ = (id) => document.getElementById(id);
   const setText = (id, value) => { if ($(id)) $(id).textContent = value; };
+  const logo = document.querySelector('.brand img[data-site-asset]');
+  if (logo) logo.src = `${window.WEDDING_ASSET_BASE || '/'}${logo.dataset.siteAsset}`;
 
   function updateGuestName() {
     const frame = $('guest-name-frame');

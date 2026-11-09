@@ -8,8 +8,7 @@ window.WEDDING_CONFIG = {
   person2: 'Heng Kimmey',
   shortName1: 'Veha',
   shortName2: 'Kimmey',
-  initials: 'V & M',
-  welcomeName: 'Rithy & Devi',
+  initials: 'V & K',
 
   // Cambodia time (UTC+7). Example only, not a verified event date.
   weddingDate: '2026-12-19T16:00:00+07:00',

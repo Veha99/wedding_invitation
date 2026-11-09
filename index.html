@@ -20,21 +20,12 @@
       const segments = location.pathname.split('/').filter(Boolean);
       const base = location.hostname.endsWith('github.io') && segments.length ? `/${segments[0]}/` : '/';
       window.WEDDING_ASSET_BASE = base;
-      const setAssetPaths = () => document.querySelectorAll('[data-site-asset]').forEach((element) => {
-        if (element.dataset.assetReady) return;
-        const path = `${base}${element.dataset.siteAsset}`;
-        if (element.tagName === 'LINK') element.href = path;
-        else element.src = path;
-        element.dataset.assetReady = 'true';
-      });
-      new MutationObserver(setAssetPaths).observe(document.documentElement, { childList: true, subtree: true });
-      document.addEventListener('DOMContentLoaded', setAssetPaths);
+      document.write(`<link rel="stylesheet" href="${base}styles.css?v=42" />`);
+      document.write(`<script src="${base}wedding-config.js?v=7" defer><\/script>`);
+      document.write(`<script src="${base}translations.js?v=8" defer><\/script>`);
+      document.write(`<script src="${base}script.js?v=18" defer><\/script>`);
     })();
   </script>
-  <link rel="stylesheet" data-site-asset="styles.css?v=41" />
-  <script data-site-asset="wedding-config.js?v=6" defer></script>
-  <script data-site-asset="translations.js?v=8" defer></script>
-  <script data-site-asset="script.js?v=17" defer></script>
 </head>
 
 <body class="invitation-locked">
@@ -52,14 +43,14 @@
       <div class="envelope-wrap" aria-hidden="true">
         <div class="envelope-shadow"></div>
         <div class="envelope">
-          <div class="envelope__letter"><span>the wedding of</span><strong id="cover-initials">R & D</strong></div>
+          <div class="envelope__letter"><span>the wedding of</span><strong id="cover-initials">V & K</strong></div>
           <div class="envelope__flap"></div>
           <div class="envelope__front"></div>
           <div class="envelope__seal">✦</div>
         </div>
       </div>
       <p class="intro__overline">Together with our families</p>
-      <h1 class="intro__heading" id="cover-names">Rithy <em>&</em> Devi</h1>
+      <h1 class="intro__heading" id="cover-names">Veha <em>&</em> Kimmey</h1>
       <p class="intro__subtitle">Joyfully invite you to celebrate our special day</p>
       <div class="guest-name-frame" id="guest-name-frame" aria-live="polite">
         <span class="guest-name-frame__ornament guest-name-frame__ornament--top" aria-hidden="true"></span>
@@ -92,12 +83,12 @@
         <div class="hero__content reveal">
           <span class="eyebrow eyebrow--line">A CELEBRATION OF LOVE</span>
           <p class="hero__script">The wedding of</p>
-          <h1 class="hero__name"><span id="hero-name1">Rithy</span><span class="hero__amp">&</span><span
-              id="hero-name2">Devi</span></h1>
+          <h1 class="hero__name"><span id="hero-name1">Veha</span><span class="hero__amp">&</span><span
+              id="hero-name2">Kimmey</span></h1>
           <div class="ornamental-rule"><span>✧</span></div>
           <p class="hero__copy">One beautiful beginning, a lifetime of forever. We would love for you to be part of our
             special day.</p>
-          <div class="hero__date" id="hero-date">SATURDAY, 20 FEBRUARY 2027</div>
+          <div class="hero__date" id="hero-date">SATURDAY, 19 DECEMBER 2026</div>
           <a href="#details" class="btn btn--outline">Explore the celebration <span aria-hidden="true">↗</span></a>
         </div>
         <div class="hero__visual reveal">
@@ -127,7 +118,7 @@
           <p>Through every laugh, every adventure, and every ordinary day made extraordinary, our favorite part has been
             finding our way to each other.</p>
           <p>Now, surrounded by our favorite people, we're beginning our most beautiful chapter yet.</p>
-          <span class="story__signature" id="story-signature">Rithy & Devi</span>
+          <span class="story__signature" id="story-signature">Veha & Kimmey</span>
         </div>
       </section>
 
@@ -350,10 +341,10 @@
         <span class="closing__top">TO LOVE, LAUGHTER & HAPPILY EVER AFTER</span>
         <h2>See you at <em>our wedding!</em></h2>
         <div class="closing__heart">♡</div>
-        <strong id="footer-names">Rithy & Devi</strong>
+        <strong id="footer-names">Veha & Kimmey</strong>
       </section>
     </main>
-    <footer class="footer"><span id="footer-year">2027</span> <span>·</span> <span>Made with love ♡</span><button
+    <footer class="footer"><span id="footer-year">2026</span> <span>·</span> <span>Made with love ♡</span><button
         id="share-link" type="button">Share invitation ↗</button></footer>
   </div>
 
