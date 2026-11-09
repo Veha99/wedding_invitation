@@ -163,6 +163,8 @@
   const photos = Array.isArray(cfg.photos) ? cfg.photos : [];
   function putPhoto(img, src){
     if (!img) return;
+    if (img.id !== 'hero-photo' && img.id !== 'lightbox-image') img.loading = 'lazy';
+    img.decoding = 'async';
     img.onerror = () => { img.classList.add('is-missing'); };
     img.onload = () => { img.classList.remove('is-missing'); };
     img.src = src || '';
