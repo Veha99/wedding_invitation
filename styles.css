@@ -1304,6 +1304,14 @@ section {
     color: var(--soft-gold)
 }
 
+.closing__message {
+    width: min(620px, 100%);
+    margin: 8px auto 20px;
+    color: rgba(81, 65, 62, .86);
+    font-size: 16px;
+    line-height: 1.85;
+}
+
 .closing__heart {
     font-size: 40px;
     color: var(--soft-gold)
@@ -2053,6 +2061,8 @@ html[lang="km"] .countdown span{font:500 15px/1.6 'Noto Sans Khmer',var(--font-s
 @media(max-width:760px){html[lang="km"] .details .section-heading>.eyebrow{font-size:15px}html[lang="km"] .countdown span{font-size:12px}}
 html[lang="km"] .closing__top{font:500 17px/1.8 'Noto Sans Khmer',var(--font-sans),sans-serif;letter-spacing:0}
 @media(max-width:760px){html[lang="km"] .closing__top{font-size:14px}}
+html[lang="km"] .closing__message{font:400 18px/2 'Noto Sans Khmer',var(--font-sans),sans-serif}
+@media(max-width:760px){.closing__message{font-size:14px}html[lang="km"] .closing__message{font-size:16px}}
 html[lang="km"] .details-invitation time{font:600 21px/1.8 'Noto Sans Khmer',var(--font-sans),sans-serif}
 html[lang="km"] .details-invitation>span{font:600 22px/1.8 'Noto Sans Khmer',var(--font-sans),sans-serif}
 html[lang="km"] .details-invitation strong{font:600 24px/1.8 'Noto Sans Khmer',var(--font-sans),sans-serif}

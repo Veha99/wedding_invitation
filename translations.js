@@ -39,6 +39,7 @@ window.WEDDING_TRANSLATIONS = [
   ['.gallery .section-heading p:last-child', 'Little glimpses of a love that keeps growing.', 'ទិដ្ឋភាពតូចៗនៃសេចក្តីស្រឡាញ់ដែលរីកចម្រើនជានិច្ច។'],
   ['.closing__top', 'TO LOVE, LAUGHTER & HAPPILY EVER AFTER', 'ជូនចំពោះសេចក្តីស្រឡាញ់ សំណើច និងសុភមង្គលជានិរន្តរ៍'],
   ['.closing h2', 'See you at <em>our wedding!</em>', 'ជួបគ្នានៅ<em>ពិធីមង្គលការរបស់យើង!</em>'],
+  ['.closing__message', 'Thank you for sharing in the joy of our wedding. Your love and presence made our celebration truly unforgettable.', 'យើងខ្ញុំពិតជាអរគុណដែលលោកអ្នកបានចូលរួមចែករំលែកសេចក្តីសប្បាយរីករាយក្នុងពិធីមង្គលការរបស់យើង។ វត្តមាន និងក្តីស្រឡាញ់របស់លោកអ្នក បានធ្វើឱ្យថ្ងៃដ៏ពិសេសនេះក្លាយជាអនុស្សាវរីយ៍ដែលយើងមិនអាចបំភ្លេចបាន។'],
   ['.footer span:nth-of-type(3)', 'Made with love ♡', 'បង្កើតឡើងដោយក្តីស្រឡាញ់ ♡'],
   ['#share-link', 'Share invitation ↗', 'ចែករំលែកលិខិតអញ្ជើញ ↗']
 ];
