@@ -38,6 +38,7 @@
   const wedding = new Date(cfg.weddingDate || '2027-02-20T16:00:00+07:00');
   const longDay = cfg.weddingDayLabel || new Intl.DateTimeFormat('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Phnom_Penh'}).format(wedding);
   let currentLanguage = 'en';
+  let activeGalleryCategory = null;
 
   function toKhmerDigits(value) {
     return String(value).replace(/\d/g, (digit) => '០១២៣៤៥៦៧៨៩'[Number(digit)]);
@@ -115,6 +116,26 @@
       item.setAttribute('aria-label', `${aria.gallery} ${isKhmer ? new Intl.NumberFormat('km-KH').format(index+1) : index+1}`);
       item.querySelector('img').alt = isKhmer ? `រូបថតគំរូទី ${new Intl.NumberFormat('km-KH').format(index+1)}` : `Wedding gallery sample ${index+1}`;
     });
+    document.querySelectorAll('.gallery-dialog__item').forEach((item, index) => {
+      const number = new Intl.NumberFormat(isKhmer ? 'km-KH' : 'en-GB').format(index + 1);
+      item.setAttribute('aria-label', `${aria.gallery} ${number}`);
+      item.querySelector('img').alt = isKhmer ? `រូបថតក្នុងវិចិត្រសាលទី ${number}` : `Wedding gallery photo ${number}`;
+    });
+    document.querySelectorAll('.gallery-dialog__category').forEach((item, index) => {
+      const category = photoCategories[index];
+      const title = isKhmer ? (category.titleKm || category.title) : category.title;
+      item.querySelector('.gallery-dialog__category-title').textContent = title;
+      item.querySelector('img').alt = title;
+      const count = new Intl.NumberFormat(isKhmer ? 'km-KH' : 'en-GB').format(category.photos.length);
+      item.querySelector('.gallery-dialog__category-count').textContent = isKhmer ? `${count} រូប` : `${count} photos`;
+    });
+    $('gallery-dialog-close').setAttribute('aria-label', isKhmer ? 'បិទវិចិត្រសាលរូបថត' : 'Close photo gallery');
+    $('gallery-photo-count').textContent = new Intl.NumberFormat(isKhmer ? 'km-KH' : 'en-GB').format(photos.length);
+    $('gallery-category-back-label').textContent = isKhmer ? 'អាល់ប៊ុមទាំងអស់' : 'All albums';
+    if (activeGalleryCategory !== null) {
+      const category = photoCategories[activeGalleryCategory];
+      $('gallery-dialog-title').textContent = isKhmer ? (category.titleKm || category.title) : category.title;
+    }
     $('lightbox').setAttribute('aria-label', aria.lightbox);
     $('lightbox-close').setAttribute('aria-label', aria.close);
     $('lightbox-prev').setAttribute('aria-label', aria.prev);
@@ -160,7 +181,20 @@
 
   // If a photo cannot load (for example offline), a soft botanical-colored
   // background is displayed. Replace stock URL entries with your own files.
-  const photos = Array.isArray(cfg.photos) ? cfg.photos : [];
+  const photoCategories = Array.isArray(cfg.photoCategories) && cfg.photoCategories.length
+    ? cfg.photoCategories
+      .map((category, index) => ({
+        id: category.id || `album-${index + 1}`,
+        title: category.title || `Album ${index + 1}`,
+        titleKm: category.titleKm || '',
+        cover: category.cover || '',
+        photos: Array.isArray(category.photos) ? category.photos.filter(Boolean) : []
+      }))
+      .filter(category => category.photos.length)
+    : (Array.isArray(cfg.photos) && cfg.photos.length
+      ? [{ id: 'all-photos', title: 'All photos', titleKm: 'រូបថតទាំងអស់', photos: cfg.photos.filter(Boolean) }]
+      : []);
+  const photos = photoCategories.flatMap(category => category.photos);
   function putPhoto(img, src){
     if (!img) return;
     if (img.id !== 'hero-photo' && img.id !== 'lightbox-image') img.loading = 'lazy';
@@ -173,6 +207,28 @@
   putPhoto($('story-photo'), photos[1] || photos[0]);
   putPhoto($('story-mini-photo'), photos[3] || photos[0]);
   document.querySelectorAll('.gallery__item').forEach((item,index) => putPhoto(item.querySelector('img'), photos[index]));
+  const galleryDialog = $('gallery-dialog');
+  const galleryDialogCategories = $('gallery-dialog-categories');
+  const galleryDialogGrid = $('gallery-dialog-grid');
+  photoCategories.forEach((category, index) => {
+    const button = document.createElement('button');
+    button.className = 'gallery-dialog__category';
+    button.type = 'button';
+    button.dataset.categoryIndex = String(index);
+    const image = document.createElement('img');
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    putPhoto(image, category.cover || category.photos[0]);
+    const copy = document.createElement('span');
+    copy.className = 'gallery-dialog__category-copy';
+    const title = document.createElement('span');
+    title.className = 'gallery-dialog__category-title';
+    const count = document.createElement('span');
+    count.className = 'gallery-dialog__category-count';
+    copy.append(title, count);
+    button.append(image, copy);
+    galleryDialogCategories.append(button);
+  });
   applyLanguage(currentLanguage);
   document.querySelectorAll('.language-toggle').forEach((toggle) => {
     toggle.addEventListener('click', () => applyLanguage(currentLanguage === 'en' ? 'km' : 'en'));
@@ -277,33 +333,113 @@
 
   // Gallery lightbox, keyboard accessible.
   let activePhoto=0;
+  let lightboxPhotos=photos;
   let lastFocused=null;
   const lightbox=$('lightbox');
   function showPhoto(index){
-    activePhoto=(index+photos.length)%photos.length;
-    putPhoto($('lightbox-image'),photos[activePhoto]);
+    activePhoto=(index+lightboxPhotos.length)%lightboxPhotos.length;
+    putPhoto($('lightbox-image'),lightboxPhotos[activePhoto]);
     const photoNumber = new Intl.NumberFormat(currentLanguage === 'km' ? 'km-KH' : 'en-GB').format(activePhoto+1);
-    const totalPhotos = new Intl.NumberFormat(currentLanguage === 'km' ? 'km-KH' : 'en-GB').format(photos.length);
+    const totalPhotos = new Intl.NumberFormat(currentLanguage === 'km' ? 'km-KH' : 'en-GB').format(lightboxPhotos.length);
     setText('lightbox-counter',`${photoNumber} / ${totalPhotos}`);
   }
-  function openPhoto(index){
-    if(!photos.length)return;
+  function openPhoto(index, collection=photos){
+    if(!collection.length)return;
     lastFocused=document.activeElement;
+    lightboxPhotos=collection;
     showPhoto(index);
     lightbox.classList.add('is-open');lightbox.setAttribute('aria-hidden','false');
     $('lightbox-close').focus();
   }
   function closePhoto(){lightbox.classList.remove('is-open');lightbox.setAttribute('aria-hidden','true');lastFocused?.focus();}
-  document.querySelectorAll('.gallery__item').forEach(el=>el.addEventListener('click',()=>openPhoto(Number(el.dataset.index))));
+  document.querySelectorAll('.gallery__item').forEach(el=>el.addEventListener('click',()=>openPhoto(Number(el.dataset.index),photos)));
+  const galleryMore = $('gallery-more');
+  const galleryDialogClose = $('gallery-dialog-close');
+  const galleryCategoryBack = $('gallery-category-back');
+  function showGalleryCategories(){
+    const previousCategory=activeGalleryCategory;
+    activeGalleryCategory=null;
+    galleryDialogCategories.hidden=false;
+    galleryDialogGrid.hidden=true;
+    galleryCategoryBack.hidden=true;
+    setText('gallery-dialog-title',currentLanguage === 'km' ? 'វិចិត្រសាលរូបថតរបស់យើង' : 'Our photo gallery');
+    if(previousCategory!==null&&galleryDialog.classList.contains('is-open')){
+      galleryDialogCategories.querySelector(`[data-category-index="${previousCategory}"]`)?.focus();
+    }
+  }
+  function openGalleryCategory(index){
+    const category=photoCategories[index];
+    if(!category)return;
+    activeGalleryCategory=index;
+    galleryDialogGrid.replaceChildren();
+    category.photos.forEach((src, photoIndex)=>{
+      const button=document.createElement('button');
+      button.className='gallery-dialog__item photo-shell';
+      button.type='button';
+      button.dataset.index=String(photoIndex);
+      const image=document.createElement('img');
+      image.loading='lazy';
+      image.decoding='async';
+      const number=new Intl.NumberFormat(currentLanguage === 'km' ? 'km-KH' : 'en-GB').format(photoIndex+1);
+      button.setAttribute('aria-label',currentLanguage === 'km' ? `បើកមើលរូបថតទី ${number}` : `Open photo ${number}`);
+      image.alt=currentLanguage === 'km' ? `រូបថតក្នុងអាល់ប៊ុមទី ${number}` : `Photo ${number}`;
+      button.append(image);
+      galleryDialogGrid.append(button);
+      putPhoto(image,src);
+    });
+    setText('gallery-dialog-title',currentLanguage === 'km' ? (category.titleKm || category.title) : category.title);
+    galleryDialogCategories.hidden=true;
+    galleryDialogGrid.hidden=false;
+    galleryDialogGrid.scrollTop=0;
+    galleryCategoryBack.hidden=false;
+    galleryDialogGrid.querySelector('.gallery-dialog__item')?.focus();
+  }
+  galleryDialogCategories.addEventListener('click',event=>{
+    const card=event.target.closest('.gallery-dialog__category');
+    if(card)openGalleryCategory(Number(card.dataset.categoryIndex));
+  });
+  galleryCategoryBack.addEventListener('click',showGalleryCategories);
+  function openGallery(){
+    showGalleryCategories();
+    galleryDialog.classList.add('is-open');
+    galleryDialog.setAttribute('aria-hidden','false');
+    document.body.classList.add('gallery-dialog-open');
+    galleryDialogClose.focus();
+  }
+  function closeGallery(){
+    showGalleryCategories();
+    galleryDialog.classList.remove('is-open');
+    galleryDialog.setAttribute('aria-hidden','true');
+    document.body.classList.remove('gallery-dialog-open');
+    galleryMore.focus();
+  }
+  galleryMore.addEventListener('click',openGallery);
+  galleryDialogClose.addEventListener('click',closeGallery);
+  galleryDialog.addEventListener('click',event=>{if(event.target===galleryDialog)closeGallery();});
+  galleryDialogGrid.addEventListener('click',event=>{
+    const tile=event.target.closest('.gallery-dialog__item');
+    if(tile&&activeGalleryCategory!==null)openPhoto(Number(tile.dataset.index),photoCategories[activeGalleryCategory].photos);
+  });
   $('lightbox-close').addEventListener('click',closePhoto);
   $('lightbox-prev').addEventListener('click',()=>showPhoto(activePhoto-1));
   $('lightbox-next').addEventListener('click',()=>showPhoto(activePhoto+1));
   lightbox.addEventListener('click',event=>{if(event.target===lightbox)closePhoto();});
   document.addEventListener('keydown',event=>{
-    if(!lightbox.classList.contains('is-open'))return;
-    if(event.key==='Escape')closePhoto();
-    if(event.key==='ArrowLeft')showPhoto(activePhoto-1);
-    if(event.key==='ArrowRight')showPhoto(activePhoto+1);
+    if(lightbox.classList.contains('is-open')){
+      if(event.key==='Escape')closePhoto();
+      if(event.key==='ArrowLeft')showPhoto(activePhoto-1);
+      if(event.key==='ArrowRight')showPhoto(activePhoto+1);
+      return;
+    }
+    if(!galleryDialog.classList.contains('is-open'))return;
+    if(event.key==='Escape')closeGallery();
+    if(event.key==='Tab'){
+      const focusable=Array.from(galleryDialog.querySelectorAll('button:not([disabled])'))
+        .filter(button=>!button.closest('[hidden]'));
+      const first=focusable[0],last=focusable[focusable.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+    }
   });
 
   // Native share sheet where available, otherwise copy URL.

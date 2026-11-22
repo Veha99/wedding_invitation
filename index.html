@@ -460,6 +460,9 @@
           <button class="gallery__item reveal photo-shell" type="button" data-index="5"
             aria-label="Open gallery photo 6"><img alt="Wedding gallery sample 6" loading="lazy" /></button>
         </div>
+        <button class="btn btn--outline gallery__more" id="gallery-more" type="button" aria-haspopup="dialog"
+          aria-controls="gallery-dialog"><span id="gallery-more-label">See all photos</span><span
+            class="gallery__more-count" id="gallery-photo-count">6</span></button>
       </section>
       <section class="closing section-pad">
         <span class="closing__top">TO LOVE, LAUGHTER & HAPPILY EVER AFTER</span>
@@ -537,6 +540,24 @@
     title="Toggle music"><span id="music-icon">♪</span><span class="music-button__bars"
       aria-hidden="true"><i></i><i></i><i></i></span></button>
   <audio id="background-music" loop preload="none"></audio>
+  <div class="gallery-dialog" id="gallery-dialog" role="dialog" aria-modal="true"
+    aria-labelledby="gallery-dialog-title" aria-hidden="true">
+    <section class="gallery-dialog__panel">
+      <header class="gallery-dialog__header">
+        <div>
+          <p class="eyebrow">PHOTO GALLERY</p>
+          <h2 id="gallery-dialog-title">Our photo gallery</h2>
+          <button class="gallery-dialog__back" id="gallery-category-back" type="button" hidden>
+            <span aria-hidden="true">←</span> <span id="gallery-category-back-label">All albums</span>
+          </button>
+        </div>
+        <button class="gallery-dialog__close" id="gallery-dialog-close" type="button"
+          aria-label="Close gallery">×</button>
+      </header>
+      <div class="gallery-dialog__categories" id="gallery-dialog-categories"></div>
+      <div class="gallery-dialog__grid" id="gallery-dialog-grid" hidden></div>
+    </section>
+  </div>
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" aria-hidden="true">
     <button type="button" class="lightbox__close" id="lightbox-close" aria-label="Close photo viewer">✕</button>
     <button type="button" class="lightbox__arrow lightbox__arrow--prev" id="lightbox-prev"

@@ -1,14 +1,11 @@
 .DS_Store
 Thumbs.db
 
-# Keep unused photo originals private; the six photos referenced by the site are tracked.
+# Keep high-resolution photo sources local; optimized copies are used by the site.
 /assets/images/*.JPG
-!/assets/images/RAK_7405.JPG
-!/assets/images/RAK_7555.JPG
-!/assets/images/RAK_7739.JPG
-!/assets/images/RAK_7767.JPG
-!/assets/images/RAK_8520.JPG
-!/assets/images/RAK_8550.JPG
+/assets/images/originals/
+/assets/images/pp_pre_wedding/
+/assets/images/sr_pre_wedding/
 
 # The replaced track is no longer used by the site.
 /assets/audio/wedding-melody.wav
