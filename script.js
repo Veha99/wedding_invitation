@@ -215,6 +215,7 @@
     button.className = 'gallery-dialog__category';
     button.type = 'button';
     button.dataset.categoryIndex = String(index);
+    button.dataset.categoryId = category.id;
     const image = document.createElement('img');
     image.loading = 'lazy';
     image.decoding = 'async';

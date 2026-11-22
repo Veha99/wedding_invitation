@@ -118,7 +118,7 @@ window.WEDDING_CONFIG = {
       id: 'school-pre-wedding',
       title: 'School Pre Wedding',
       titleKm: 'រូបថតមុនថ្ងៃមង្គលការនៅសាលា',
-      cover: `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/LZ6_3895.jpg`,
+      cover: `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/LZ6_3907.jpg`,
       photos: [
         `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/LZ6_3895.jpg`,
         `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/LZ6_3907.jpg`,

@@ -1368,16 +1368,21 @@ section {
 .gallery-dialog__categories {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: max-content;
     align-content: start;
+    flex: 1 1 auto;
     gap: 18px;
     overflow: auto;
+    min-height: 0;
     padding: 22px;
 }
 
 .gallery-dialog__category {
+    align-self: start;
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-width: 0;
     overflow: hidden;
     padding: 0;
     border: 1px solid #e2d3c2;
@@ -1395,6 +1400,7 @@ section {
 
 .gallery-dialog__category img {
     display: block;
+    flex: 0 0 auto;
     width: 100%;
     aspect-ratio: 4/3;
     object-fit: cover;
@@ -1404,11 +1410,14 @@ section {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex: 0 0 auto;
     gap: 10px;
+    min-height: 54px;
     padding: 15px 16px;
 }
 
 .gallery-dialog__category-title {
+    min-width: 0;
     font: 400 20px/1.35 var(--font-serif);
 }
 
@@ -1443,8 +1452,10 @@ section {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     grid-auto-rows: clamp(220px, 23vw, 270px);
     align-content: start;
+    flex: 1 1 auto;
     gap: 14px;
     overflow: auto;
+    min-height: 0;
     padding: 22px;
 }
 
