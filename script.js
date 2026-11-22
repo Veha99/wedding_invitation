@@ -195,6 +195,9 @@
       ? [{ id: 'all-photos', title: 'All photos', titleKm: 'រូបថតទាំងអស់', photos: cfg.photos.filter(Boolean) }]
       : []);
   const photos = photoCategories.flatMap(category => category.photos);
+  const homepagePhotos = photoCategories
+    .filter(category => category.id !== 'school-pre-wedding')
+    .flatMap(category => category.photos);
   function putPhoto(img, src){
     if (!img) return;
     if (img.id !== 'hero-photo' && img.id !== 'lightbox-image') img.loading = 'lazy';
@@ -203,10 +206,10 @@
     img.onload = () => { img.classList.remove('is-missing'); };
     img.src = src || '';
   }
-  putPhoto($('hero-photo'), photos[0]);
-  putPhoto($('story-photo'), photos[1] || photos[0]);
-  putPhoto($('story-mini-photo'), photos[3] || photos[0]);
-  document.querySelectorAll('.gallery__item').forEach((item,index) => putPhoto(item.querySelector('img'), photos[index]));
+  putPhoto($('hero-photo'), homepagePhotos[0]);
+  putPhoto($('story-photo'), homepagePhotos[1] || homepagePhotos[0]);
+  putPhoto($('story-mini-photo'), homepagePhotos[3] || homepagePhotos[0]);
+  document.querySelectorAll('.gallery__item').forEach((item,index) => putPhoto(item.querySelector('img'), homepagePhotos[index]));
   const galleryDialog = $('gallery-dialog');
   const galleryDialogCategories = $('gallery-dialog-categories');
   const galleryDialogGrid = $('gallery-dialog-grid');
@@ -334,7 +337,7 @@
 
   // Gallery lightbox, keyboard accessible.
   let activePhoto=0;
-  let lightboxPhotos=photos;
+  let lightboxPhotos=homepagePhotos;
   let lastFocused=null;
   const lightbox=$('lightbox');
   function showPhoto(index){
@@ -344,7 +347,7 @@
     const totalPhotos = new Intl.NumberFormat(currentLanguage === 'km' ? 'km-KH' : 'en-GB').format(lightboxPhotos.length);
     setText('lightbox-counter',`${photoNumber} / ${totalPhotos}`);
   }
-  function openPhoto(index, collection=photos){
+  function openPhoto(index, collection=homepagePhotos){
     if(!collection.length)return;
     lastFocused=document.activeElement;
     lightboxPhotos=collection;
@@ -353,7 +356,7 @@
     $('lightbox-close').focus();
   }
   function closePhoto(){lightbox.classList.remove('is-open');lightbox.setAttribute('aria-hidden','true');lastFocused?.focus();}
-  document.querySelectorAll('.gallery__item').forEach(el=>el.addEventListener('click',()=>openPhoto(Number(el.dataset.index),photos)));
+  document.querySelectorAll('.gallery__item').forEach(el=>el.addEventListener('click',()=>openPhoto(Number(el.dataset.index),homepagePhotos)));
   const galleryMore = $('gallery-more');
   const galleryDialogClose = $('gallery-dialog-close');
   const galleryCategoryBack = $('gallery-category-back');
