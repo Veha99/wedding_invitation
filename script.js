@@ -35,6 +35,9 @@
   const short1 = cfg.shortName1 || cfg.person1 || 'Partner One';
   const short2 = cfg.shortName2 || cfg.person2 || 'Partner Two';
   const names = `${short1} & ${short2}`;
+  const short1Km = cfg.shortName1Km || 'វេហា';
+  const short2Km = cfg.shortName2Km || 'គីមមុី';
+  const namesKm = `${short1Km} & ${short2Km}`;
   const wedding = new Date(cfg.weddingDate || '2027-02-20T16:00:00+07:00');
   const longDay = cfg.weddingDayLabel || new Intl.DateTimeFormat('en-GB', {weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Phnom_Penh'}).format(wedding);
   let currentLanguage = 'en';
@@ -71,14 +74,17 @@
   function applyLanguage(language) {
     currentLanguage = language === 'km' ? 'km' : 'en';
     const isKhmer = currentLanguage === 'km';
+    const displayShort1 = isKhmer ? short1Km : short1;
+    const displayShort2 = isKhmer ? short2Km : short2;
+    const displayNames = isKhmer ? namesKm : names;
     document.documentElement.lang = currentLanguage;
     (window.WEDDING_TRANSLATIONS || []).forEach(([selector, english, khmer]) => {
       document.querySelectorAll(selector).forEach((element) => { element.innerHTML = isKhmer ? khmer : english; });
     });
     const ui = (window.WEDDING_UI_TEXT || {})[currentLanguage] || {};
-    document.title = `${names} — ${ui.title || 'Wedding Invitation'}`;
+    document.title = `${displayNames} — ${ui.title || 'Wedding Invitation'}`;
     document.querySelector('meta[name="description"]').content = isKhmer
-      ? `សូមអញ្ជើញចូលរួមអបអរសាទរពិធីមង្គលការរបស់ ${cfg.person1 || short1} និង ${cfg.person2 || short2}។`
+      ? `សូមអញ្ជើញចូលរួមអបអរសាទរពិធីមង្គលការរបស់ ${displayNames}។`
       : `You are invited to celebrate the wedding of ${cfg.person1 || short1} and ${cfg.person2 || short2}.`;
     const venueNameIsCustom = hasCustomVenueName(cfg.venueName);
     const venueLabel = isKhmer
@@ -95,14 +101,14 @@
     });
     const aria = isKhmer ? {
       intro:'បើកលិខិតអញ្ជើញចូលរួមពិធីមង្គលការ', nav:'ម៉ឺនុយមេ', countdown:'រាប់ថយក្រោយដល់ថ្ងៃមង្គលការ',
-      hero:'រូបថត Veha និង Kimmey ក្នុងសម្លៀកបំពាក់អាពាហ៍ពិពាហ៍', story:'រូបថតគូស្វាមីភរិយាកំពុងដើរជាមួយគ្នា',
-      detail:'រូបថតលម្អិតនៃពិធីមង្គលការ', gallery:'បើកមើលរូបថតទី', musicOn:'ផ្អាកតន្ត្រីផ្ទៃខាងក្រោយ',
+      hero:`រូបថត ${displayNames} ក្នុងសម្លៀកបំពាក់អាពាហ៍ពិពាហ៍`, story:`រូបថត ${displayNames} អង្គុយជាមួយគ្នាក្នុងសាលដ៏ប្រណីត`,
+      detail:`រូបថត ${displayNames} ស្លៀកអាវពណ៌ស និងកំពុងលោតលេង`, gallery:'បើកមើលរូបថតទី', musicOn:'ផ្អាកតន្ត្រីផ្ទៃខាងក្រោយ',
       musicOff:'ចាក់តន្ត្រីផ្ទៃខាងក្រោយ', lightbox:'កម្មវិធីមើលរូបថត', close:'បិទកម្មវិធីមើលរូបថត',
       prev:'រូបថតមុន', next:'រូបថតបន្ទាប់', enlarged:'រូបថតពិធីមង្គលការដែលពង្រីក'
     } : {
       intro:'Open wedding invitation', nav:'Main navigation', countdown:'Countdown to our wedding',
-      hero:'Veha and Kimmey sharing a wedding portrait', story:'Wedding couple walking together — sample gallery photo',
-      detail:'Wedding detail — sample gallery photo', gallery:'Open gallery photo', musicOn:'Pause background music',
+      hero:'Veha and Kimmey sharing a wedding portrait', story:'Veha and Kimmey seated together in an ornate hall',
+      detail:'Veha and Kimmey in white shirts, jumping together', gallery:'Open gallery photo', musicOn:'Pause background music',
       musicOff:'Play background music', lightbox:'Photo viewer', close:'Close photo viewer',
       prev:'Previous photo', next:'Next photo', enlarged:'Enlarged wedding gallery sample'
     };
@@ -141,6 +147,14 @@
     $('lightbox-prev').setAttribute('aria-label', aria.prev);
     $('lightbox-next').setAttribute('aria-label', aria.next);
     $('lightbox-image').alt = aria.enlarged;
+    $('cover-names').innerHTML = `<span class="intro__name-first">${displayShort1}</span> <em>&</em> <span class="intro__name-second">${displayShort2}</span>`;
+    setText('hero-name1', displayShort1);
+    setText('hero-name2', displayShort2);
+    setText('story-signature', displayNames);
+    setText('footer-names', displayNames);
+    if ($('gift-photo')) $('gift-photo').alt = isKhmer
+      ? `រូបថត ${displayNames} កាន់កូដ QR ទូទាត់ ABA`
+      : `${short1} and ${short2} holding their ABA payment QR code`;
     $('music-button').title = isKhmer ? 'បិទ/បើកតន្ត្រី' : 'Toggle music';
     $('music-button').setAttribute('aria-label', $('music-button').getAttribute('aria-pressed') === 'true' ? aria.musicOn : aria.musicOff);
     const dayLabel = localizedWeddingDay();
@@ -207,8 +221,8 @@
     img.src = src || '';
   }
   putPhoto($('hero-photo'), cfg.heroPhoto || homepagePhotos[0]);
-  putPhoto($('story-photo'), homepagePhotos[1] || homepagePhotos[0]);
-  putPhoto($('story-mini-photo'), homepagePhotos[3] || homepagePhotos[0]);
+  putPhoto($('story-photo'), cfg.storyPhoto || homepagePhotos[1] || homepagePhotos[0]);
+  putPhoto($('story-mini-photo'), cfg.storyMiniPhoto || homepagePhotos[3] || homepagePhotos[0]);
   document.querySelectorAll('.gallery__item').forEach((item,index) => putPhoto(item.querySelector('img'), homepagePhotos[index]));
   const galleryDialog = $('gallery-dialog');
   const galleryDialogCategories = $('gallery-dialog-categories');
@@ -456,7 +470,7 @@
     const url=location.href.split('#')[0];
     try{
       if(navigator.share){
-        const text=currentLanguage === 'km' ? 'សូមអញ្ជើញចូលរួមអបអរសាទរជាមួយ ' + names + '!' : 'You are invited to celebrate with ' + names + '!';
+        const text=currentLanguage === 'km' ? 'សូមអញ្ជើញចូលរួមអបអរសាទរជាមួយ ' + namesKm + '!' : 'You are invited to celebrate with ' + names + '!';
         await navigator.share({title:document.title,text,url});return;
       }
       await navigator.clipboard.writeText(url);
