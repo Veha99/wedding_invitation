@@ -51,7 +51,7 @@
       }).formatToParts(wedding).map(({type,value}) => [type,value]));
       const weekdays = {Sunday:'អាទិត្យ',Monday:'ចន្ទ',Tuesday:'អង្គារ',Wednesday:'ពុធ',Thursday:'ព្រហស្បតិ៍',Friday:'សុក្រ',Saturday:'សៅរ៍'};
       const months = ['មករា','កុម្ភៈ','មីនា','មេសា','ឧសភា','មិថុនា','កក្កដា','សីហា','កញ្ញា','តុលា','វិច្ឆិកា','ធ្នូ'];
-      return `ថ្ងៃ${weekdays[parts.weekday]} ទី${toKhmerDigits(parts.day)} ខែ${months[Number(parts.month)-1]} ឆ្នាំ${toKhmerDigits(parts.year)}`;
+      return cfg.weddingDayLabelKm || `ថ្ងៃ${weekdays[parts.weekday]} ទី${toKhmerDigits(parts.day)} ខែ${months[Number(parts.month)-1]} ឆ្នាំ${toKhmerDigits(parts.year)}`;
     }
     return longDay;
   }
@@ -95,13 +95,13 @@
     });
     const aria = isKhmer ? {
       intro:'បើកលិខិតអញ្ជើញចូលរួមពិធីមង្គលការ', nav:'ម៉ឺនុយមេ', countdown:'រាប់ថយក្រោយដល់ថ្ងៃមង្គលការ',
-      hero:'រូបថតគូស្វាមីភរិយាគំរូ សូមជំនួសដោយរូបថតផ្ទាល់ខ្លួន', story:'រូបថតគូស្វាមីភរិយាកំពុងដើរជាមួយគ្នា',
+      hero:'រូបថត Veha និង Kimmey ក្នុងសម្លៀកបំពាក់អាពាហ៍ពិពាហ៍', story:'រូបថតគូស្វាមីភរិយាកំពុងដើរជាមួយគ្នា',
       detail:'រូបថតលម្អិតនៃពិធីមង្គលការ', gallery:'បើកមើលរូបថតទី', musicOn:'ផ្អាកតន្ត្រីផ្ទៃខាងក្រោយ',
       musicOff:'ចាក់តន្ត្រីផ្ទៃខាងក្រោយ', lightbox:'កម្មវិធីមើលរូបថត', close:'បិទកម្មវិធីមើលរូបថត',
       prev:'រូបថតមុន', next:'រូបថតបន្ទាប់', enlarged:'រូបថតពិធីមង្គលការដែលពង្រីក'
     } : {
       intro:'Open wedding invitation', nav:'Main navigation', countdown:'Countdown to our wedding',
-      hero:'Sample wedding portrait; replace with your own photo', story:'Wedding couple walking together — sample gallery photo',
+      hero:'Veha and Kimmey sharing a wedding portrait', story:'Wedding couple walking together — sample gallery photo',
       detail:'Wedding detail — sample gallery photo', gallery:'Open gallery photo', musicOn:'Pause background music',
       musicOff:'Play background music', lightbox:'Photo viewer', close:'Close photo viewer',
       prev:'Previous photo', next:'Next photo', enlarged:'Enlarged wedding gallery sample'
@@ -150,7 +150,7 @@
     setText('invitation-location', venueLabel);
     setText('invitation-address', venueAddress);
     setText('venue-address', venueAddress);
-    setText('hero-date', isKhmer ? dayLabel : dayLabel.toUpperCase());
+    setText('hero-date', isKhmer ? (cfg.weddingDayLabelKm || dayLabel) : dayLabel.toUpperCase());
     setText('ceremony-date', dayLabel);
     setText('reception-date', dayLabel);
     if (typeof updateCountdown === 'function') updateCountdown();
@@ -206,7 +206,7 @@
     img.onload = () => { img.classList.remove('is-missing'); };
     img.src = src || '';
   }
-  putPhoto($('hero-photo'), homepagePhotos[0]);
+  putPhoto($('hero-photo'), cfg.heroPhoto || homepagePhotos[0]);
   putPhoto($('story-photo'), homepagePhotos[1] || homepagePhotos[0]);
   putPhoto($('story-mini-photo'), homepagePhotos[3] || homepagePhotos[0]);
   document.querySelectorAll('.gallery__item').forEach((item,index) => putPhoto(item.querySelector('img'), homepagePhotos[index]));
@@ -418,6 +418,11 @@
     galleryMore.focus();
   }
   galleryMore.addEventListener('click',openGallery);
+  $('gift-toggle').addEventListener('click', () => {
+    const isExpanded = $('gift-toggle').getAttribute('aria-expanded') === 'true';
+    $('gift-toggle').setAttribute('aria-expanded', String(!isExpanded));
+    $('gift-content').hidden = isExpanded;
+  });
   galleryDialogClose.addEventListener('click',closeGallery);
   galleryDialog.addEventListener('click',event=>{if(event.target===galleryDialog)closeGallery();});
   galleryDialogGrid.addEventListener('click',event=>{

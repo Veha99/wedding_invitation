@@ -11,9 +11,10 @@ window.WEDDING_CONFIG = {
   initials: 'V & K',
 
   // Cambodia time (UTC+7). Example only, not a verified event date.
-  weddingDate: '2026-12-19T16:00:00+07:00',
+  weddingDate: '2026-12-19T17:00:00+07:00',
   weddingDayLabel: 'Saturday, 19 December 2026',
-  ceremonyTime: '4:00 PM',
+  weddingDayLabelKm: 'ថ្ងៃសៅរ៍ ទី១៩ ខែធ្នូ ឆ្នាំ២០២៦',
+  ceremonyTime: '5:00 PM',
   receptionTime: '6:00 PM',
   venueName: "The bride's residence",
   venueNameKm: 'គេហដ្ធានខាងស្រី',
@@ -27,11 +28,12 @@ window.WEDDING_CONFIG = {
   // Stock photos need internet access.
   // Add each new image under its album. The first image becomes that
   // album's cover; the album and photo counts update automatically.
+  heroPhoto: `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/RAK_7739.jpg`,
   photoCategories: [
     {
       id: 'phnom-penh-pre-wedding',
-      title: 'Phnom Penh Pre Wedding',
-      titleKm: 'រូបថតមុនថ្ងៃមង្គលការនៅភ្នំពេញ',
+      title: 'Phnom Penh Photoshoot',
+      titleKm: 'រូបមុនថ្ងៃរៀបអាពាហ៍ពិពាហ៍នៅភ្នំពេញ',
       cover: `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/RAK_7729.jpg`,
       photos: [
         `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/RAK_7349.jpg`,
@@ -78,8 +80,8 @@ window.WEDDING_CONFIG = {
     },
     {
       id: 'sr-pre-wedding',
-      title: 'SR Pre Wedding',
-      titleKm: 'រូបថតមុនថ្ងៃមង្គលការ SR',
+      title: 'Siem Reap Photoshoot',
+      titleKm: 'រូបមុនថ្ងៃរៀបអាពាហ៍ពិពាហ៍នៅភ្សៀមរាប',
       cover: `${window.WEDDING_ASSET_BASE}assets/images/optimized/sr_pre_wedding/ENDZ8758.jpg`,
       photos: [
         `${window.WEDDING_ASSET_BASE}assets/images/optimized/sr_pre_wedding/ENDZ8658.jpg`,
@@ -116,8 +118,8 @@ window.WEDDING_CONFIG = {
     },
     {
       id: 'school-pre-wedding',
-      title: 'School Pre Wedding',
-      titleKm: 'រូបថតមុនថ្ងៃមង្គលការនៅសាលា',
+      title: 'High School Memories',
+      titleKm: 'អនុស្សាវរីយ៍នៅវិទ្យាល័យ',
       cover: `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/LZ6_3907.jpg`,
       photos: [
         `${window.WEDDING_ASSET_BASE}assets/images/optimized/pp_pre_wedding/LZ6_3895.jpg`,
